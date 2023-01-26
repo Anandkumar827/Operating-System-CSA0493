@@ -1,73 +1,62 @@
-#include <stdio.h>
-
-#define MAX_PROCESSES 10
-#define QUANTUM 2
-
-typedef struct {
-    int process_id;
-    int burst_time;
-    int remaining_time;
-    int waiting_time;
-    int turn_around_time;
-} Process;
-
-void get_waiting_time(Process processes[], int n) {
-    int i;
-    processes[0].waiting_time = 0;
-    for (i = 1; i < n; i++) {
-        processes[i].waiting_time = processes[i - 1].waiting_time + processes[i - 1].burst_time;
-    }
-}
-
-void get_turn_around_time(Process processes[], int n) {
-    int i;
-    for (i = 0; i < n; i++) {
-        processes[i].turn_around_time = processes[i].burst_time + processes[i].waiting_time;
-    }
-}
-
-void print_table(Process processes[], int n) {
-    int i;
-    printf("Process ID\tBurst Time\tWaiting Time\tTurnaround Time\n");
-    for (i = 0; i < n; i++) {
-        printf("%d\t\t%d\t\t%d\t\t%d\n", processes[i].process_id, processes[i].burst_time, processes[i].waiting_time, processes[i].turn_around_time);
-    }
-}
-
-int main() {
-    int i, n;
-    Process processes[MAX_PROCESSES];
-
-    printf("Enter the number of processes: ");
-    scanf("%d", &n);
-
-    for (i = 0; i < n; i++) {
-        processes[i].process_id = i + 1;
-        printf("Enter burst time for process %d: ", i + 1);
-        scanf("%d", &processes[i].burst_time);
-        processes[i].remaining_time = processes[i].burst_time;
-    }
-
-    int time = 0;
-    int done = 0;
-    while (done < n) {
-        for (i = 0; i < n; i++) {
-            if (processes[i].remaining_time > 0) {
-                if (processes[i].remaining_time > QUANTUM) {
-                    time += QUANTUM;
-                    processes[i].remaining_time -= QUANTUM;
-                } else {
-                    time += processes[i].remaining_time;
-                    processes[i].remaining_time = 0;
-                    done++;
-                }
-            }
-        }
-    }
-
-    get_waiting_time(processes, n);
-    get_turn_around_time(processes, n);
-    print_table(processes, n);
-
-    return 0;
+#include<stdio.h>  
+#include<conio.h>  
+  
+int main()  
+{  
+    int i, NOP, sum=0,count=0, y, quant, wt=0, tat=0, at[10], bt[10], temp[10];  
+    float avg_wt, avg_tat;  
+    printf(" Total number of process in the system: ");  
+    scanf("%d", &NOP);  
+    y = NOP; 
+for(i=0; i<NOP; i++)  
+{  
+printf("\n Enter the Arrival and Burst time of the Process[%d]\n", i+1);  
+printf(" Arrival time is: \t");  
+scanf("%d", &at[i]);  
+printf(" \nBurst time is: \t");   
+scanf("%d", &bt[i]);  
+temp[i] = bt[i];   
+}  
+printf("Enter the Time Quantum for the process: \t");  
+scanf("%d", &quant);  
+printf("\n Process No \t\t Burst Time \t\t TAT \t\t Waiting Time ");  
+for(sum=0, i = 0; y!=0; )  
+{  
+if(temp[i] <= quant && temp[i] > 0)  
+{  
+    sum = sum + temp[i];  
+    temp[i] = 0;  
+    count=1;  
+    }     
+    else if(temp[i] > 0)  
+    {  
+        temp[i] = temp[i] - quant;  
+        sum = sum + quant;    
+    }  
+    if(temp[i]==0 && count==1)  
+    {  
+        y--; 
+        printf("\nProcess No[%d] \t\t %d\t\t\t\t %d\t\t\t %d", i+1, bt[i], sum-at[i], sum-at[i]-bt[i]);  
+        wt = wt+sum-at[i]-bt[i];  
+        tat = tat+sum-at[i];  
+        count =0;     
+    }  
+    if(i==NOP-1)  
+    {  
+        i=0;  
+    }  
+    else if(at[i+1]<=sum)  
+    {  
+        i++;  
+    }  
+    else  
+    {  
+        i=0;  
+    }  
+}  
+avg_wt = wt * 1.0/NOP;  
+avg_tat = tat * 1.0/NOP;  
+printf("\n Average Turn Around Time: \t%f", avg_wt);  
+printf("\n Average Waiting Time: \t%f", avg_tat);  
+getch();  
 }
