@@ -1,7 +1,6 @@
 #include<stdio.h>
-#include<conio.h>
 #include<string.h>
-int main()
+void main()
 {
 int nf=0,i=0,j=0,ch;
 char mdname[10],fname[10][10],name[10];
@@ -33,5 +32,4 @@ printf("Directory name is:%s\n",mdname);
 printf("Files names are:");
 for(i=0;i<j;i++)
 printf("\n%s",fname[i]);
-getch();
 }
